@@ -180,6 +180,7 @@ class Skin extends MultiMaterial {
 					break;
 				}
 			skinShader = hasNormalMap ? new h3d.shader.SkinTangent() : new h3d.shader.Skin();
+			skinShader.fourBonesByVertex = skinData.bonesPerVertex == 4;
 			var maxBones = 0;
 			if( skinData.splitJoints != null ) {
 				for( s in skinData.splitJoints )
@@ -245,6 +246,7 @@ class Skin extends MultiMaterial {
 	}
 
 	override function emit( ctx : RenderContext ) {
+		syncJoints(); // In case sync was not called because of culling (eg fixedPosition)
 		if( splitPalette == null )
 			super.emit(ctx);
 		else {
